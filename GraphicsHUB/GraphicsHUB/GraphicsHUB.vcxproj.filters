@@ -27,7 +27,7 @@
     <ClCompile Include="WbLib\editor.cpp">
       <Filter>PolylineTools</Filter>
     </ClCompile>
-    <ClCompile Include="WbLib\editor_main.cpp">
+    <ClCompile Include="WbLib\edit_test_Main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

@@ -23,6 +23,15 @@ void DrawLib::drawLine2i(GLint x1,GLint y1,GLint x2,GLint y2,Color3f c)
 	glEnd();
 }
 
+void DrawLib::drawLine2i(Point2i p1,Point2i p2,Color3f c)
+{
+	glColor3f(c.r,c.g,c.b);
+	glBegin(GL_LINES);
+		glVertex2i(p1.x,p1.y);
+		glVertex2i(p2.x,p2.y);
+	glEnd();
+}
+
 void DrawLib::drawLineStrip2i(std::vector<Point2i> PointsArray,Color3f c,bool closed)
 {
 	glColor3f(c.r,c.g,c.b);

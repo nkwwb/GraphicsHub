@@ -78,7 +78,7 @@
   <ItemGroup>
     <ClCompile Include="WbLib\DrawLib.cpp" />
     <ClCompile Include="WbLib\editor.cpp" />
-    <ClCompile Include="WbLib\editor_main.cpp" />
+    <ClCompile Include="WbLib\edit_test_Main.cpp" />
     <ClCompile Include="WbLib\GeneralLib.cpp" />
   </ItemGroup>
   <ItemGroup>

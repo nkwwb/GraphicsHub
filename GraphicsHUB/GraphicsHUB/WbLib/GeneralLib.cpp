@@ -1,12 +1,12 @@
 #include "stdafx.h"
 
-GLfloat GlutEnvironmentInit::foreground_r=0.0f,GlutEnvironmentInit::foreground_g=0.0f,\
-	GlutEnvironmentInit::foreground_b=0.0f;
+GLfloat GlutEnvironmentInit::foreground_r,GlutEnvironmentInit::foreground_g,\
+	GlutEnvironmentInit::foreground_b;
 
-GLfloat GlutEnvironmentInit::background_r=1.0f,GlutEnvironmentInit::background_g=1.0f,\
-	GlutEnvironmentInit::background_b=1.0f,GlutEnvironmentInit::Alpha=0.0f;
+GLfloat GlutEnvironmentInit::background_r,GlutEnvironmentInit::background_g,\
+	GlutEnvironmentInit::background_b,GlutEnvironmentInit::Alpha;
 	 
-GLint GlutEnvironmentInit::WIN_WIDTH=WIN_W,GlutEnvironmentInit::WIN_HEIGHT=WIN_H;
+GLint GlutEnvironmentInit::WIN_WIDTH,GlutEnvironmentInit::WIN_HEIGHT;
 
 Point::Point(){}
 
@@ -14,6 +14,11 @@ Point::Point(GLint x0,GLint y0)
 {
 	x=x0;
 	y=y0;
+}
+
+bool Point::operator==(const Point& p)const
+{
+	return x==p.x && y==p.y;
 }
 
 Color::Color(GLfloat r0,GLfloat g0,GLfloat b0)
@@ -25,6 +30,12 @@ Color::Color(GLfloat r0,GLfloat g0,GLfloat b0)
 Color4f::Color4f(GLfloat r0,GLfloat g0,GLfloat b0,GLfloat alpha):Color(r0,g0,b0)
 {
 	Alpha=alpha;
+}
+
+Size::Size(int w,int h)
+{
+	width=w;
+	height=h;
 }
 
 Color3f GlutEnvironmentInit::getForeGroundColor()
@@ -72,39 +83,43 @@ void GlutEnvironmentInit::setWindowSize(int width,int height)
 If call this function without calling set- API before,
 it will use default parameters.
 */
-void GlutEnvironmentInit::GeneralInit(void (*fun)(),char* winName)
+void GlutEnvironmentInit::GeneralInit(uint displayMode,\
+									  GLenum matrixMode,\
+									  void (*displayfun)(),\
+									  void (*keyboardfun)(uchar key,int x,int y),\
+									  void (*mousefun)(int button,int state,int x,int y),\
+									  void (*mouseMovefun)(int x,int y),\
+									  void (*mousePassiveMovefun)(int x,int y),\
+									  Color3f fore,\
+									  Color4f back,\
+									  char* winName,\
+									  Size winsize\
+									  )
 {
-	
+	setWindowSize(winsize.width,winsize.height);
+	setForeGroundColor(fore.r,fore.g,fore.b);
+	setBackGroundColor(back.r,back.g,back.b);
+
 	glutInitWindowSize(WIN_WIDTH,WIN_HEIGHT);
-	glutInitDisplayMode(GLUT_RGB|GLUT_SINGLE);
+	glutInitDisplayMode(displayMode);
 	glutCreateWindow(winName);
-	glutDisplayFunc(fun);
+	glutDisplayFunc(displayfun);
+
+	if(keyboardfun)
+		glutKeyboardFunc(keyboardfun);
+	if(mousefun)
+		glutMouseFunc(mousefun);
+	if(mouseMovefun)
+		glutMotionFunc(mouseMovefun);
+	if(mousePassiveMovefun)
+		glutPassiveMotionFunc(mousePassiveMovefun);
+
 	glClearColor(background_r,background_g,background_b,Alpha);
 	glColor3f(foreground_r,foreground_g,foreground_b);
 
-	glMatrixMode(GL_PROJECTION);
+	glMatrixMode(matrixMode);
 	glLoadIdentity();
 	gluOrtho2D(0.0,WIN_WIDTH,0.0,WIN_HEIGHT);
 
 }
 
-/**
-Use default parameters to initialize glut environment.
-*/
-void GlutEnvironmentInit::AllInit(void (*fun)(),char* winName)
-{
-	setBackGroundColor();
-	setForeGroundColor();
-	setWindowSize();
-
-	glutInitWindowSize(WIN_WIDTH,WIN_HEIGHT);
-	glutInitDisplayMode(GLUT_RGB|GLUT_SINGLE);
-	glutCreateWindow(winName);
-	glutDisplayFunc(fun);
-	glClearColor(background_r,background_g,background_b,Alpha);
-	glColor3f(foreground_r,foreground_g,foreground_b);
-
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	gluOrtho2D(0.0,WIN_WIDTH,0.0,WIN_HEIGHT);
-}

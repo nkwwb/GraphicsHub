@@ -12,7 +12,12 @@
 #define WIN_H 480
 #endif
 
+#ifndef null
+#define null 0
+#endif
+
 typedef unsigned char uchar;
+typedef unsigned int uint;
 
 class Point{
 public:
@@ -20,6 +25,7 @@ public:
 	GLint y;
 	Point();
 	Point(GLint x0,GLint y0);
+	bool operator==(const Point& p)const;
 };
 
 typedef Point Point2i;
@@ -31,6 +37,14 @@ public:
 	//Color();
 	Color(GLfloat r0,GLfloat g0,GLfloat b0);
 
+};
+
+class Size{
+public:
+	int width;
+	int height;
+public:
+	Size(int w,int h);
 };
 
 class Color4f:public Color{
@@ -64,6 +78,16 @@ public:
 
 	//GlutEnvironmentInit();
 
-	void GeneralInit(void (*fun)(),char* winName="WINDOW");
-	void AllInit(void (*fun)(),char* winName="WINDOW");
+	void GeneralInit(uint displayMode,GLenum matrixMode,\
+		void (*displayfun)(),\
+		void (*keyboardfun)(uchar key,int x,int y)=null,\
+		void (*mousefun)(int button,int state,int x,int y)=null,\
+		void (*mouseMovefun)(int x,int y)=null,\
+		void (*mousePassiveMovefun)(int x,int y)=null,\
+		Color3f fore=Color3f(0.0f,0.0f,0.0f),\
+		Color4f back=Color4f(1.0f,1.0f,1.0f,0.0f),\
+		char* winName="WINDOW",\
+		Size winsize=Size(WIN_W,WIN_H));
+		
+
 };

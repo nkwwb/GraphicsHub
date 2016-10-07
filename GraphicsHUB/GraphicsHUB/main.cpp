@@ -24,10 +24,6 @@ void draw2()
 int main(int argc,char** argv)
 {
 	glutInit(&argc,argv);
-	void (*ptr)();
-	ptr=draw2;
-	GlutEnvironmentInit::setWindowSize(640,640);
-	GlutEnvironmentInit().GeneralInit(ptr,"Test");
-
+	GlutEnvironmentInit().GeneralInit(GLUT_RGB|GLUT_SINGLE,GL_PROJECTION,draw,0,0,0,0);
 	glutMainLoop();
 }
