@@ -8,18 +8,18 @@ GLfloat GlutEnvironmentInit::background_r,GlutEnvironmentInit::background_g,\
 	 
 GLint GlutEnvironmentInit::WIN_WIDTH,GlutEnvironmentInit::WIN_HEIGHT;
 
-Point::Point(){}
-
-Point::Point(GLint x0,GLint y0)
-{
-	x=x0;
-	y=y0;
-}
-
-bool Point::operator==(const Point& p)const
-{
-	return x==p.x && y==p.y;
-}
+//template<typename T> Point<T>::Point(){}
+//
+//template<typename T> Point<T>::Point(T x0,T y0)
+//{
+//	x=x0;
+//	y=y0;
+//}
+//
+//template<typename T> bool Point<T>::operator==(const Point<T>& p)const
+//{
+//	return x==p.x && y==p.y;
+//}
 
 Color::Color(GLfloat r0,GLfloat g0,GLfloat b0)
 {
@@ -31,6 +31,8 @@ Color4f::Color4f(GLfloat r0,GLfloat g0,GLfloat b0,GLfloat alpha):Color(r0,g0,b0)
 {
 	Alpha=alpha;
 }
+
+//template<typename T> Rect<T>::Rect(T l,T r,T b,T t):left(l),right(r),bottom(b),top(t){}
 
 Size::Size(int w,int h)
 {
@@ -79,6 +81,18 @@ void GlutEnvironmentInit::setWindowSize(int width,int height)
 	WIN_HEIGHT=height;
 }
 
+void GlutEnvironmentInit::setWindow(GLenum matrixmode,GLdouble left,GLdouble right,GLdouble bottom,GLdouble top)
+{
+	glMatrixMode(matrixmode);
+	glLoadIdentity();
+	gluOrtho2D(left,right,bottom,top);
+}
+
+void GlutEnvironmentInit::setViewport(GLint left,GLint right,GLint bottom,GLint top)
+{
+	glViewport(left,bottom,right-left,top-bottom);
+}
+
 /**
 If call this function without calling set- API before,
 it will use default parameters.
@@ -117,9 +131,9 @@ void GlutEnvironmentInit::GeneralInit(uint displayMode,\
 	glClearColor(background_r,background_g,background_b,Alpha);
 	glColor3f(foreground_r,foreground_g,foreground_b);
 
-	glMatrixMode(matrixMode);
+	/*glMatrixMode(matrixMode);
 	glLoadIdentity();
-	gluOrtho2D(0.0,WIN_WIDTH,0.0,WIN_HEIGHT);
-
+	gluOrtho2D(0.0,WIN_WIDTH,0.0,WIN_HEIGHT);*/
+	setWindow(matrixMode,0.0,WIN_WIDTH,0.0,WIN_HEIGHT);
 }
 

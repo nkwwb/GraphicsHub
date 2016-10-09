@@ -19,16 +19,21 @@
 typedef unsigned char uchar;
 typedef unsigned int uint;
 
+template<typename T>
 class Point{
 public:
-	GLint x;
-	GLint y;
-	Point();
-	Point(GLint x0,GLint y0);
-	bool operator==(const Point& p)const;
+	T x;
+	T y;
+	Point(){}
+	Point(T x0,T y0):x(x0),y(y0){}
+	bool operator==(const Point<T>& p)const
+	{
+		return p.x==x && p.y==y;
+	}
 };
 
-typedef Point Point2i;
+typedef Point<int> Point2i;
+typedef Point<double> Point2d;
 
 class Color{
 	
@@ -55,6 +60,18 @@ public:
 
 typedef Color Color3f;
 
+template <typename T>
+class Rect
+{
+public:
+	T left,right,bottom,top;
+	Rect(){}
+	Rect(T l,T r,T b,T t):left(l),right(r),bottom(b),top(t){}
+};
+
+typedef Rect<int> Recti;
+typedef Rect<double> Rectd;
+
 class GlutEnvironmentInit{
 
 	static GLfloat foreground_r,foreground_g,foreground_b;
@@ -76,7 +93,9 @@ public:
 
 	static void setWindowSize(int width=WIN_W,int height=WIN_H);
 
-	//GlutEnvironmentInit();
+	void setWindow(GLenum matrixmode,GLdouble left,GLdouble right,GLdouble bottom,GLdouble top);
+
+	void setViewport(GLint left,GLint right,GLint bottom,GLint top);
 
 	void GeneralInit(uint displayMode,GLenum matrixMode,\
 		void (*displayfun)(),\

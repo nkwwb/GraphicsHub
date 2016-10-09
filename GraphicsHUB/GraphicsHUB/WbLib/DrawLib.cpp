@@ -32,6 +32,24 @@ void DrawLib::drawLine2i(Point2i p1,Point2i p2,Color3f c)
 	glEnd();
 }
 
+void DrawLib::drawLine2d(GLdouble x1,GLdouble y1,GLdouble x2,GLdouble y2,Color c)
+{
+	glColor3f(c.r,c.g,c.b);
+	glBegin(GL_LINES);
+		glVertex2d(x1,y1);
+		glVertex2d(x2,y2);
+	glEnd();
+}
+
+void DrawLib::drawLine2d(Point2d p1,Point2d p2,Color3f c)
+{
+	glColor3f(c.r,c.g,c.b);
+	glBegin(GL_LINES);
+		glVertex2d(p1.x,p1.y);
+		glVertex2d(p2.x,p2.y);
+	glEnd();
+}
+
 void DrawLib::drawLineStrip2i(std::vector<Point2i> PointsArray,Color3f c,bool closed)
 {
 	glColor3f(c.r,c.g,c.b);
@@ -84,3 +102,4 @@ void DrawLib::drawCheckerBoard(int size,Color3f c1,Color3f c2,Point2i start)
 	}
 	
 }
+

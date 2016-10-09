@@ -18,7 +18,7 @@ enum MODE{BASIC,LINE,DEL,MOVE,REF,QUIT};
 
 class Editor{
 
-	static std::vector< std::vector<Point2i> > groupPoints;
+	static std::vector< std::vector< Point2i > > groupPoints;
 	static int status;
 
 	static int group_sz;
