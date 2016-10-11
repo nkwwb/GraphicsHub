@@ -18,8 +18,8 @@ int main(int argc,char**argv)
 		Editor::MouseClick,\
 		Editor::MouseMove,\
 		Editor::MousePassiveMove,\
-		Color3f(1.0f,1.0f,1.0f),\
-		Color4f(0.0f,0.0f,0.0f,0.0f));
+		Color3f(0.0f,0.0f,0.0f),\
+		Color4f(1.0f,1.0f,1.0f,0.0f));
 
 	//glutInitWindowSize(WIN_W,WIN_H);
 

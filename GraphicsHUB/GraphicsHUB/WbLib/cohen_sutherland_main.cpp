@@ -1,20 +1,21 @@
 #include "stdafx.h"
 #include "DrawLib.h"
+#include "clipper.h"
 #include "editor.h"
 #include <vector>
 
-Point2d p[2];
-Rectd rect;
+Point2i p[2];
+Recti RectK;
 bool select=false;
 void display()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
-	DrawLib::drawLine2d(p[0],p[1],GlutEnvironmentInit::getForeGroundColor());
+	DrawLib::drawLine2i(p[0],p[1],GlutEnvironmentInit::getForeGroundColor());
 	glBegin(GL_LINE_LOOP);
-	glVertex2d(rect.left,rect.bottom);
-	glVertex2d(rect.right,rect.bottom);
-	glVertex2d(rect.right,rect.top);
-	glVertex2d(rect.left,rect.top);
+	glVertex2i(RectK.left,RectK.bottom);
+	glVertex2i(RectK.right,RectK.bottom);
+	glVertex2i(RectK.right,RectK.top);
+	glVertex2i(RectK.left,RectK.top);
 	glEnd();
 	glutSwapBuffers();
 }
@@ -22,8 +23,13 @@ void keyboard(uchar key,int x,int y)
 {
 	if(key=='c')
 	{
-		DrawLib::clipSegment(p[0],p[1],rect);
-		glutPostRedisplay();
+		if(i_Cohend_Clipper::clipSegment(p[0],p[1],RectK))
+			glutPostRedisplay();
+		else {
+
+			p[0]=Point2i(0,0);p[1]=Point2i(0.0,0.0);
+			glutPostRedisplay();
+		}
 	}
 }
 
@@ -55,8 +61,8 @@ void move(int x,int y)
 int main(int argc, char**argv)
 {
 	glutInit(&argc,argv);
-	p[0]=Point2d(0.0,0.0);p[1]=Point2d(0.0,0.0);
-	rect=Rectd(160.0,480.0,120.0,360.0);
+	p[0]=Point2i(0,0);p[1]=Point2i(0,0);
+	RectK=Recti(160,480,120,360);
 	GlutEnvironmentInit().GeneralInit(GLUT_RGB|GLUT_DOUBLE,GL_PROJECTION,display,keyboard,mouse,move);
 	glutMainLoop();
 }

@@ -1,4 +1,4 @@
-﻿生成启动时间为 2016/10/9 13:04:39。
+﻿生成启动时间为 2016/10/11 21:29:52。
      1>项目“E:\王文彬\my project in G3\GraphicsHUB\GraphicsHUB\GraphicsHUB.vcxproj”在节点 2 上(Build 个目标)。
      1>ClCompile:
          D:\visual studio2012\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /D _UNICODE /D UNICODE /D YYDEBUG /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt WbLib\cohen_sutherland_main.cpp
@@ -13,4 +13,4 @@
 
 生成成功。
 
-已用时间 00:00:08.69
+已用时间 00:00:18.42

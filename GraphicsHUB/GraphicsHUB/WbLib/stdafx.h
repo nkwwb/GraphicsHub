@@ -16,24 +16,26 @@
 #define null 0
 #endif
 
-typedef unsigned char uchar;
-typedef unsigned int uint;
 
 template<typename T>
 class Point{
 public:
 	T x;
 	T y;
-	Point(){}
+	Point(){x=0;y=0;}
 	Point(T x0,T y0):x(x0),y(y0){}
+	Point(const Point<T>& p) //deep copy
+	{
+		x=p.x;
+		y=p.y;
+	}
 	bool operator==(const Point<T>& p)const
 	{
 		return p.x==x && p.y==y;
 	}
 };
 
-typedef Point<int> Point2i;
-typedef Point<double> Point2d;
+
 
 class Color{
 	
@@ -58,17 +60,23 @@ public:
 	Color4f(GLfloat r0,GLfloat g0,GLfloat b0,GLfloat alpha);
 };
 
-typedef Color Color3f;
+
 
 template <typename T>
 class Rect
 {
 public:
 	T left,right,bottom,top;
-	Rect(){}
+	Rect(){left=right=bottom=top=0;}
 	Rect(T l,T r,T b,T t):left(l),right(r),bottom(b),top(t){}
 };
 
+typedef unsigned char uchar;
+typedef unsigned int uint;
+
+typedef Point<int> Point2i;
+typedef Point<double> Point2d;
+typedef Color Color3f;
 typedef Rect<int> Recti;
 typedef Rect<double> Rectd;
 
@@ -110,3 +118,4 @@ public:
 		
 
 };
+

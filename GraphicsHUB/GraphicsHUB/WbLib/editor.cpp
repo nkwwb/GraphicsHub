@@ -1,6 +1,6 @@
 #include "editor.h"
 #include "DrawLib.h"
-
+#include "clipper.h"
 // basic status
 std::vector< std::vector<Point2i> > Editor::groupPoints;
 int Editor::status=0;
@@ -16,6 +16,19 @@ Point2i OriSeed;
 bool selected=false;
 bool move_selected=false;
 bool initstate=true;
+bool rect_selected=false;
+Recti rect;
+Point2i rect_start,rect_end;
+
+#define DRAWRECT(rect) \
+{ \
+	std::vector<Point2i> parray;\
+	parray.push_back(Point2i(rect.left,rect.bottom));\
+	parray.push_back(Point2i(rect.right,rect.bottom));\
+	parray.push_back(Point2i(rect.right,rect.top));\
+	parray.push_back(Point2i(rect.left,rect.top));\
+	DrawLib::drawLineStrip2i(parray,GlutEnvironmentInit::getForeGroundColor(),true);\
+}
 
 
 bool Editor::search(Point2i seed,int& group,int& idx)
@@ -65,6 +78,18 @@ void Editor::Display()
 					DrawLib::drawLineStrip2i(groupPoints[i],GlutEnvironmentInit::getForeGroundColor(),true);
 				DrawLib::drawLineStrip2i(groupPoints[groupPoints.size()-1],GlutEnvironmentInit::getForeGroundColor());
 				DrawLib::drawLine2i(groupPoints[group_sz-1][npoints-1],CP,GlutEnvironmentInit::getForeGroundColor());
+				DRAWRECT(rect);
+				glutSwapBuffers();
+			}
+			break;
+
+		case RECT:
+			if(rect_selected)
+			{
+				glClear(GL_COLOR_BUFFER_BIT);
+				for(unsigned int i=0;i<groupPoints.size();i++)
+					DrawLib::drawLineStrip2i(groupPoints[i],GlutEnvironmentInit::getForeGroundColor(),true);
+				DRAWRECT(rect);
 				glutSwapBuffers();
 			}
 			break;
@@ -73,6 +98,7 @@ void Editor::Display()
 			glClear(GL_COLOR_BUFFER_BIT);
 			for(unsigned int i=0;i<groupPoints.size();i++)
 					DrawLib::drawLineStrip2i(groupPoints[i],GlutEnvironmentInit::getForeGroundColor(),true);
+			DRAWRECT(rect);
 			glutSwapBuffers();
 			break;
 
@@ -87,6 +113,7 @@ void Editor::Display()
 				groupPoints[group][idx].x=OriSeed.x+(CP.x-MoveSeed.x);
 				groupPoints[group][idx].y=OriSeed.y+(CP.y-MoveSeed.y);
 				DrawLib::drawLineStrip2i(groupPoints[group],GlutEnvironmentInit::getForeGroundColor(),true);
+				DRAWRECT(rect);
 				glutSwapBuffers();
 			}
 		}
@@ -108,10 +135,13 @@ void Editor::keyBoardEvents(uchar key,int x,int y)
 			if(group_sz>0)
 			{
 				
-				DrawLib::drawLine2i(groupPoints[group_sz-1][npoints-1],CP,GlutEnvironmentInit::getBackGroundColor());
+				//DrawLib::drawLine2i(groupPoints[group_sz-1][npoints-1],CP,GlutEnvironmentInit::getBackGroundColor());
 				// the last closing edge
-				DrawLib::drawLine2i(groupPoints[group_sz-1][0],groupPoints[group_sz-1][npoints-1],GlutEnvironmentInit::getForeGroundColor());
-				
+				//DrawLib::drawLine2i(groupPoints[group_sz-1][0],groupPoints[group_sz-1][npoints-1],GlutEnvironmentInit::getForeGroundColor());
+				glClear(GL_COLOR_BUFFER_BIT);
+				for(unsigned int i=0;i<groupPoints.size();i++)
+					DrawLib::drawLineStrip2i(groupPoints[i],GlutEnvironmentInit::getForeGroundColor(),true);
+				DRAWRECT(rect);
 				npoints=0;
 				status=BASIC; // return to basic status
 				selected=false;
@@ -119,7 +149,9 @@ void Editor::keyBoardEvents(uchar key,int x,int y)
 			}
 		}
 		break;
-		
+	case 'w':
+		status=RECT;
+		break;
 	case 'd':
 		status=DEL;
 		break;
@@ -128,12 +160,42 @@ void Editor::keyBoardEvents(uchar key,int x,int y)
 		status=MOVE;
 		break;
 
+	case 'c':
+		glClear(GL_COLOR_BUFFER_BIT);
+		DRAWRECT(rect);
+		for(unsigned int i=0;i<groupPoints.size();i++)
+		{
+			for(unsigned int j=0;j<groupPoints[i].size();j++)
+			{
+				Point2i p1(groupPoints[i][j]);
+				Point2i p2(groupPoints[i][(j+1)%groupPoints[i].size()]);
+
+				// red in, blue out
+				if(i_Cohend_Clipper::clipSegment(p1,p2,rect))
+				{
+					DrawLib::drawLine2i(groupPoints[i][j],p1,Color3f(0.0f,0.0f,1.0f));
+					DrawLib::drawLine2i(p1,p2,Color3f(1.0f,0.0f,0.0f));
+					DrawLib::drawLine2i(p2,groupPoints[i][(j+1)%groupPoints[i].size()],Color3f(0.0f,0.0f,1.0f));
+				}
+				else
+				{
+					DrawLib::drawLine2i(groupPoints[i][j],p1,Color3f(0.0f,0.0f,1.0f));
+					DrawLib::drawLine2i(p1,p2,Color3f(0.0f,0.0f,1.0f));
+					DrawLib::drawLine2i(p2,groupPoints[i][(j+1)%groupPoints[i].size()],Color3f(0.0f,0.0f,1.0f));
+				}
+			}
+		}
+		
+		glutSwapBuffers();
+		break;
+
 	case 'r':
 		status=BASIC;// return to basic
 		initstate=true;
 		groupPoints.clear();
 		group_sz=0;
 		npoints=0;
+		rect=Recti(0,0,0,0);
 		glutPostRedisplay();
 		break;
 
@@ -167,6 +229,12 @@ void Editor::MouseClick(int button,int state,int x,int y)
 			}
 			selected=true;
 			glutPostRedisplay();// call the display function
+			break;
+
+		case RECT:
+			rect_start=Point2i(x,REV(y));
+			rect_selected=true;
+			glutPostRedisplay();
 			break;
 
 		case DEL:
@@ -213,6 +281,8 @@ void Editor::MouseClick(int button,int state,int x,int y)
 	{
 		if(status==MOVE)
 			move_selected=false;
+		else if(status==RECT)
+			rect_selected=false;
 	}
 }
 
@@ -231,6 +301,14 @@ void Editor::MouseMove(int x,int y)
 	if(status==MOVE&&move_selected)
 	{
 		CP=Point2i(x,REV(y));
+		glutPostRedisplay();
+	}
+	else if(status==RECT&&rect_selected)
+	{
+		rect.left=rect_start.x<x?rect_start.x:x;
+		rect.right=rect_start.x>x?rect_start.x:x;
+		rect.top=rect_start.y>REV(y)?rect_start.y:REV(y);
+		rect.bottom=rect_start.y<REV(y)?rect_start.y:REV(y);
 		glutPostRedisplay();
 	}
 }

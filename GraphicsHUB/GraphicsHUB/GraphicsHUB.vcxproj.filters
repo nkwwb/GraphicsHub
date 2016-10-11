@@ -35,10 +35,13 @@
     <ClInclude Include="WbLib\DrawLib.h">
       <Filter>WbLib</Filter>
     </ClInclude>
+    <ClInclude Include="WbLib\editor.h">
+      <Filter>PolylineTools</Filter>
+    </ClInclude>
     <ClInclude Include="WbLib\stdafx.h">
       <Filter>WbLib</Filter>
     </ClInclude>
-    <ClInclude Include="WbLib\editor.h">
+    <ClInclude Include="WbLib\clipper.h">
       <Filter>PolylineTools</Filter>
     </ClInclude>
   </ItemGroup>

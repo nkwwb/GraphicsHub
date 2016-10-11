@@ -14,7 +14,7 @@
 
 #define DIST(p,q) (p.x-q.x)*(p.x-q.x)+(p.y-q.y)*(p.y-q.y)
 
-enum MODE{BASIC,LINE,DEL,MOVE,REF,QUIT};
+enum MODE{BASIC,LINE,RECT,DEL,MOVE,REF,QUIT};
 
 class Editor{
 

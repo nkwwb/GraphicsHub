@@ -82,6 +82,7 @@
     <ClCompile Include="WbLib\GeneralLib.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="WbLib\clipper.h" />
     <ClInclude Include="WbLib\DrawLib.h" />
     <ClInclude Include="WbLib\stdafx.h" />
     <ClInclude Include="WbLib\editor.h" />
